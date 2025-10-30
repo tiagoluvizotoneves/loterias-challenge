@@ -1,29 +1,85 @@
-# Create T3 App
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+# Desafio Frontend Rybená
 
-## What's next? How do I make an app with this?
+Este repositório contém o desafio de frontend da Rybená, utilizando o T3 Stack (Next.js, tRPC, Drizzle, PostgreSQL, Tailwind CSS, React Query).
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+## Visão Geral
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+O objetivo é construir um sistema de loterias consumindo a API pública brasileira de loterias, além de implementar um CRUD para apostas de Mega-Sena, salvando os dados no banco de dados local do projeto.
+
+## O que você deve fazer
+
+- Listar resultados de loterias (Mega-Sena, Quina, etc.) consumindo a API pública: https://github.com/guto-alves/loterias-api
+- Exibir detalhes do concurso
+- Permitir filtros e buscas por concurso, data ou tipo de loteria
+- Implementar um CRUD completo para apostas de Mega-Sena (criar, listar, editar e remover apostas salvas no banco)
+- Criar uma tabela para armazenar apostas de Mega-Sena (veja sugestão de modelagem abaixo)
+- Design responsivo e experiência agradável
+
+## Exemplo de modelagem para apostas Mega-Sena
+
+```
+id: number (PK)
+numeros: number[] (array de 6 números apostados)
+data_aposta: date
+nome_apostador: string (opcional)
+```
+
+## Dicas e informações
+
+- O projeto já possui um exemplo de schema "posts" e um router "posts" para servir de base para suas chamadas e modelagem.
+- O backend já está configurado para você criar o CRUD das apostas.
+- Não existe um arquivo Figma fornecido. Use sua criatividade para o visual e fluxo do sistema (cores, tipografia e hierarquia).
+
+## Entrega sugerida
+
+- URL do projeto no GitHub
+- README explicando como rodar o projeto
+- Página de listagem de loterias
+- Página de detalhe do concurso
+- CRUD de apostas Mega-Sena
+
+## Tecnologias utilizadas
 
 - [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Drizzle](https://orm.drizzle.team)
-- [Tailwind CSS](https://tailwindcss.com)
 - [tRPC](https://trpc.io)
+- [Drizzle ORM](https://orm.drizzle.team)
+- [PostgreSQL](https://www.postgresql.org/)
+- [Tailwind CSS](https://tailwindcss.com)
+- [React Query (TanStack Query)](https://tanstack.com/query/latest/docs/react)
 
-## Learn More
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+## Como rodar o projeto
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+1. Instale as dependências:
+	```bash
+	bun install
+	# ou
+	npm install
+	```
+2. Configure as variáveis de ambiente conforme necessário.
+3. Rode as migrations do banco de dados (Drizzle) usando os scripts do package.json:
+	```bash
+	# Gerar uma nova migration a partir do schema
+	bun run db:generate
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+	# Aplicar as migrations no banco
+	bun run db:push
 
-## How do I deploy this?
+	# (Opcional) Rodar as migrations de forma incremental
+	bun run db:migrate
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+	# (Opcional) Abrir o Drizzle Studio para visualizar o banco
+	bun run db:studio
+	```
+	> Dica: consulte a documentação do Drizzle e ajuste os comandos conforme o banco configurado (ex: `sqlite`, `postgres`, etc). Estes scripts também podem ser executados com `npm run ...` se preferir.
+4. Inicie o projeto:
+	```bash
+	bun dev
+	# ou
+	npm run dev
+	```
+
+---
+
+Qualquer dúvida, fique à vontade para abrir uma issue ou entrar em contato.
