@@ -1,9 +1,62 @@
 {
-  "id": "fe124364-0f9f-47ca-bd7c-cadab11959da",
+  "id": "64ad476a-9b4e-434e-aefa-663b8a24a9c9",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
-  "tables": {},
+  "tables": {
+    "desafio-rybena-front.aposta": {
+      "name": "aposta",
+      "schema": "desafio-rybena-front",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "nome_apostador": {
+          "name": "nome_apostador",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "numeros": {
+          "name": "numeros",
+          "type": "integer[]",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "data_aposta": {
+          "name": "data_aposta",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
   "enums": {},
   "schemas": {
     "desafio-rybena-front": "desafio-rybena-front"

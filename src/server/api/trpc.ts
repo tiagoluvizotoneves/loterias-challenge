@@ -41,6 +41,14 @@ export const createTRPCContext = async (opts: { headers: Headers }) => {
 const t = initTRPC.context<typeof createTRPCContext>().create({
   transformer: superjson,
   errorFormatter({ shape, error }) {
+    // Centralize server errors (development-friendly, English logs)
+    if (process.env.NODE_ENV !== "production") {
+      console.error("[TRPC]", {
+        message: error.message,
+        cause: error.cause,
+        code: (error as any)?.code,
+      });
+    }
     return {
       ...shape,
       data: {
@@ -91,7 +99,9 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
   const result = await next();
 
   const end = Date.now();
-  console.log(`[TRPC] ${path} took ${end - start}ms to execute`);
+  if (t._config.isDev) {
+    console.log(`[TRPC] ${path} took ${end - start}ms`);
+  }
 
   return result;
 });

@@ -1,58 +1,85 @@
-export default function NovaApostaPage() {
-  return (
-    <div className="container mx-auto max-w-3xl px-4 py-10 md:px-6 md:py-14">
-      <div className="mb-6">
-        <h1 className="text-2xl font-semibold tracking-tight md:text-3xl">
-          Nova aposta — Mega-Sena
-        </h1>
-        <p className="mt-2 text-slate-300">
-          Preencha os dados abaixo para registrar sua aposta. Esta é uma prévia visual, ainda sem integração.
-        </p>
-      </div>
+"use client";
 
-      <div className="rounded-xl border border-white/10 bg-white/5 p-6">
-        <div className="grid gap-5 md:grid-cols-2">
-          <div>
-            <label className="mb-1 block text-sm text-slate-300">Nome do apostador (opcional)</label>
-            <input
-              placeholder="Seu nome"
-              className="w-full rounded-lg bg-slate-900/60 px-3 py-2 text-sm text-white ring-1 ring-inset ring-white/10 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-            />
-          </div>
-          <div>
-            <label className="mb-1 block text-sm text-slate-300">Data da aposta</label>
-            <input
-              type="date"
-              className="w-full rounded-lg bg-slate-900/60 px-3 py-2 text-sm text-white ring-1 ring-inset ring-white/10 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-            />
-          </div>
+import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
+import { api } from "@/trpc/react";
+
+function NumberPill({ n, selected, onClick }: { n: number; selected: boolean; onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`inline-grid size-10 place-items-center rounded-full text-sm font-semibold ring-1 transition ${
+        selected ? "bg-emerald-600 text-white ring-emerald-500/40" : "bg-white/10 text-white ring-white/10 hover:bg-white/15"
+      }`}
+    >
+      {String(n).padStart(2, "0")}
+    </button>
+  );
+}
+
+export default function NovaApostaModalPage() {
+  const router = useRouter();
+  const [nome, setNome] = useState("");
+  const [nums, setNums] = useState<number[]>([]);
+  const create = api.apostas.create.useMutation({
+    onSuccess: () => router.push("/apostas"),
+  });
+
+  const numbers = useMemo(() => Array.from({ length: 60 }, (_, i) => i + 1), []);
+  const disabled = nums.length >= 6;
+
+  function toggle(n: number) {
+    setNums((prev) => {
+      if (prev.includes(n)) return prev.filter((x) => x !== n);
+      if (prev.length >= 6) return prev; // trava no 6º
+      return [...prev, n].sort((a, b) => a - b);
+    });
+  }
+
+  function submit() {
+    if (nums.length !== 6) return;
+    const nome_apostador = nome.trim() ? nome.trim() : undefined;
+    create.mutate({ nome_apostador, numeros: nums });
+  }
+
+  return (
+    <div className="container mx-auto max-w-6xl px-4 py-8 md:px-6">
+      <div className="mx-auto max-w-2xl rounded-2xl border border-white/10 bg-white/5 p-6">
+        <h1 className="text-lg font-semibold">Nova aposta — Mega-Sena</h1>
+        <p className="mt-1 text-sm text-slate-300">Selecione exatamente 6 números.</p>
+
+        <div className="mt-4 grid gap-3 md:grid-cols-[1fr_auto]">
+          <input
+            value={nome}
+            onChange={(e) => setNome(e.target.value)}
+            placeholder="Nome do apostador"
+            className="h-10 w-full rounded-md bg-white/10 px-3 text-sm text-white ring-1 ring-white/10 placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:outline-none"
+          />
+          <button
+            onClick={submit}
+            disabled={nums.length !== 6 || create.isPending}
+            className="h-10 rounded-md bg-emerald-600 px-4 text-sm font-semibold text-white ring-1 ring-emerald-500/20 transition hover:bg-emerald-500 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {create.isPending ? "Salvando…" : "Salvar aposta"}
+          </button>
         </div>
 
-        <div className="mt-5">
-          <label className="mb-2 block text-sm text-slate-300">Números (6)</label>
-          <div className="flex flex-wrap gap-2">
-            {[1, 5, 12, 27, 33, 45].map((n) => (
-              <span
-                key={n}
-                className="inline-grid size-10 place-items-center rounded-full bg-slate-800 text-white ring-1 ring-white/10"
-              >
-                {String(n).padStart(2, "0")}
-              </span>
+        <div className="mt-6 rounded-xl bg-slate-100 p-4">
+          <div className="grid grid-cols-8 gap-2 md:grid-cols-10">
+            {numbers.map((n) => (
+              <NumberPill key={n} n={n} selected={nums.includes(n)} onClick={() => toggle(n)} />
             ))}
           </div>
-        </div>
-
-        <div className="mt-6 flex items-center justify-end gap-3">
-          <a href="/" className="rounded-lg px-4 py-2 text-sm text-slate-300 ring-1 ring-inset ring-white/10">
-            Cancelar
-          </a>
-          <button className="rounded-lg bg-emerald-600 px-5 py-2.5 text-sm font-medium text-white shadow-lg shadow-emerald-600/20 hover:bg-emerald-500">
-            Salvar aposta
-          </button>
+          <div className="mt-3 text-sm text-slate-700">
+            Selecionados: {nums.map((n) => String(n).padStart(2, "0")).join(" · ") || "—"}
+          </div>
         </div>
       </div>
     </div>
   );
 }
+
+// (sem segundo export default)
 
 

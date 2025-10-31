@@ -1,0 +1,81 @@
+@keyframes hero-float-1 {
+    0% {
+        transform: translate3d(0, 0, 0) rotate(0deg);
+    }
+
+    50% {
+        transform: translate3d(18px, -24px, 0) rotate(180deg);
+    }
+
+    100% {
+        transform: translate3d(0, 0, 0) rotate(360deg);
+    }
+}
+
+@keyframes hero-float-2 {
+    0% {
+        transform: translate3d(0, 0, 0) rotate(0deg);
+    }
+
+    50% {
+        transform: translate3d(-22px, 16px, 0) rotate(-180deg);
+    }
+
+    100% {
+        transform: translate3d(0, 0, 0) rotate(-360deg);
+    }
+}
+
+@keyframes hero-float-3 {
+    0% {
+        transform: translate3d(0, 0, 0) rotate(0deg);
+    }
+
+    50% {
+        transform: translate3d(14px, 20px, 0) rotate(180deg);
+    }
+
+    100% {
+        transform: translate3d(0, 0, 0) rotate(360deg);
+    }
+}
+
+@keyframes hero-float-4 {
+    0% {
+        transform: translate3d(0, 0, 0) rotate(0deg);
+    }
+
+    50% {
+        transform: translate3d(-18px, -20px, 0) rotate(-180deg);
+    }
+
+    100% {
+        transform: translate3d(0, 0, 0) rotate(-360deg);
+    }
+}
+
+.float1 {
+    animation: hero-float-1 22s linear infinite;
+}
+
+.float2 {
+    animation: hero-float-2 26s linear infinite;
+}
+
+.float3 {
+    animation: hero-float-3 24s linear infinite;
+}
+
+.float4 {
+    animation: hero-float-4 28s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .float1,
+    .float2,
+    .float3,
+    .float4 {
+        animation: none !important;
+    }
+}

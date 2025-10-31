@@ -14,12 +14,25 @@ import { pgSchema } from "drizzle-orm/pg-core";
 
 export const rybenaSchema = pgSchema("desafio-rybena-front");
 
-export const posts = rybenaSchema.table("post", {
-  id: pg.uuid().primaryKey().defaultRandom(),
-  name: pg.varchar({ length: 256 }).notNull(),
-  createdAt: pg
-    .timestamp({ withTimezone: true })
+// Apostas (Mega-Sena)
+export const apostas = rybenaSchema.table("aposta", {
+  id: pg
+    .uuid("id")
+    .primaryKey()
+    .default(sql`gen_random_uuid()`),
+  // Nome do apostador é opcional; salvaremos como null quando não informado
+  nomeApostador: pg.varchar("nome_apostador", { length: 256 }),
+  // Seis números escolhidos (validação na aplicação e por constraint na migration)
+  numeros: pg.integer("numeros").array().notNull(),
+  dataAposta: pg
+    .timestamp("data_aposta", { withTimezone: true })
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
-  updatedAt: pg.timestamp({ withTimezone: true }).$onUpdate(() => new Date()),
+  createdAt: pg
+    .timestamp("created_at", { withTimezone: true })
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: pg
+    .timestamp("updated_at", { withTimezone: true })
+    .$onUpdate(() => new Date()),
 });
